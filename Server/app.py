@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 
-from flask import request, session, Flask
-from flask_restful import Resource
+from flask import request, make_response, jsonify, session, Flask
 from sqlalchemy.exc import IntegrityError
 
 
 
-from models import User, Artist, Song, Playlist, Playlist_Songs
-from flask_bcrypt import Bcrypt
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
-from flask_migrate import Migrate
-
 from config import app, db
+from models import User, Artist, Song, Playlist, Playlist_Songs
 
 
 
@@ -38,8 +32,8 @@ def signup():
         new_user = User(
             username=data['username'],
             streak=0,
-            score =0,
-            image_url=data.get('image_url')
+            score =0
+            #profilePic=data['profilepic']
         )
         new_user.password_hash = data['password']
         # add user to db
@@ -100,11 +94,36 @@ def logout():
     # return 204 (no content)
     return {}, 204
 
-@app.get('/recipes')
-def get_all_recipes():
-    recipes = Recipe.query.all()
-    data = [r.to_dict() for r in recipes]
+
+
+
+
+
+## actual endpoints
+
+@app.get('/playlists')
+def get_all_playlists():
+    playlists = Playlist.query.all()
+    data = [p.to_dict() for p in playlists]
     return data, 200
+
+
+@app.get('/playlists/<int:id>')
+def get_playlist_by_id(id):
+    playlist = Playlist.query.filter(
+        Playlist.id == id
+    ).first()
+
+    if not playlist:
+        return make_response(
+            jsonify({"error": "Playlist not found"}),
+            404
+
+        )
+    return make_response(
+        jsonify(playlist.to_dict()),
+        200
+    )
 
 
 if __name__ == '__main__':
