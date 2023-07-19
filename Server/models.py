@@ -6,15 +6,14 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-recipes', '-_password_hash')
+    serialize_rules = ("-_password_hash")
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     _password_hash = db.Column(db.String)
-    profilePic = db.Column(db.String, nullable=False)
+    profilePic = db.Column(db.String, nullable=True)
     score = db.Column(db.Integer)
     streak = db.Column(db.Integer)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('Sw'))
 
 
 
@@ -47,14 +46,14 @@ class Artist(db.Model, SerializerMixin):
 class Song(db.Model, SerializerMixin):
     __tablename__ = "songs"
 
-    serialize_rules =()
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     genre = db.Column(db.String, nullable=False)
     location = db.Column(db.String, nullable=False)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
     playlist_song = db.relationship('Playlist_Songs', backref='song')
 
+    serialize_rules =("-Playlist_Songs.song")
 
 
 class Playlist(db.Model, SerializerMixin):
@@ -65,6 +64,7 @@ class Playlist(db.Model, SerializerMixin):
     genre = db.Column(db.String)
     playlist_song = db.relationship('Playlist_Songs', backref='playlist')
 
+    serialize_rules =("-Playlist_Songs.playlist")
 
 
 
@@ -72,10 +72,11 @@ class Playlist_Songs(db.Model, SerializerMixin):
     __tablename__ = 'playlist_songs'
 
     id = db.Column(db.Integer, primary_key=True)
-    song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'))
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'))
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
 
 
+    serialize_rules =("Song.playlist_song" , "-Playlist.playlist_song")
 
 
 
