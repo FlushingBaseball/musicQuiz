@@ -71,6 +71,7 @@ with app.app_context():
         db.session.commit()
 
     def seed_all():
+        print("HEY IT Ran")
         seed_users()
         seed_artists()
         seed_songs()

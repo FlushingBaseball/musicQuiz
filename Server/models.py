@@ -11,7 +11,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     _password_hash = db.Column(db.String)
-    profilePic = db.Column(db.String, nullable=False)
+    profilePic = db.Column(db.String, nullable=True)
     score = db.Column(db.Integer)
     streak = db.Column(db.Integer)
 
