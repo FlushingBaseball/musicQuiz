@@ -6,7 +6,7 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-recipes', '-_password_hash')
+    serialize_rules = ()
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
@@ -14,7 +14,6 @@ class User(db.Model, SerializerMixin):
     profilePic = db.Column(db.String, nullable=False)
     score = db.Column(db.Integer)
     streak = db.Column(db.Integer)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('Sw'))
 
 
 
