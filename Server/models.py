@@ -51,7 +51,7 @@ class Song(db.Model, SerializerMixin):
     title = db.Column(db.String, nullable=False)
     genre = db.Column(db.String, nullable=False)
     location = db.Column(db.String, nullable=False)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
     playlist_song = db.relationship('Playlist_Songs', backref='song')
 
 
@@ -71,8 +71,8 @@ class Playlist_Songs(db.Model, SerializerMixin):
     __tablename__ = 'playlist_songs'
 
     id = db.Column(db.Integer, primary_key=True)
-    song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'))
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'))
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
 
 
 
