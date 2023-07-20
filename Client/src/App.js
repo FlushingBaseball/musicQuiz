@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-// import {Switch, Route} from "react-router-dom";
+import { Route, BrowserRouter,Link , Routes } from "react-router-dom";
 import NavBar from "./NavBar";
-// import Login from "./Login";
 import MusicPlayer from "./MusicPlayer";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
+import PlaylistCollection from "./PlaylistCollection";
+import Login from "./Login";
+import HomePage from "./HomePage";
+
 
 function App() {
   const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);
 
   useEffect(()=>{
     fetch("/check_session").then((r)=>{
@@ -16,21 +18,32 @@ function App() {
       }
     });
   }, []);
+  
 
-// if(!user) return <Login onLogin={setUser} />
-
+  
+    
   return (
     <div className="App">
+      <BrowserRouter>
+      <nav>
+      <Link to="/" >Home</Link>
+      <Link to="/playlists">Playlists</Link>
+      <Link to="/login">Login</Link>
+
+      </nav>
         <NavBar user={user} setUser={setUser}/>
         <main>
-          <SignIn setUser={setUser} />
-          <SignUp setUser={setUser} />
-        {/* ///<Login setUser={setUser}/> */}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login showLogin={showLogin} setShowLogin={setShowLogin} setUser={setUser}/>} />
+          <Route path="/playlists" element={<PlaylistCollection />} />
+        </Routes>
         <MusicPlayer />
-
         </main>
+        </BrowserRouter>
     </div>
   );
 }
+
 
 export default App;
