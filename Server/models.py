@@ -38,10 +38,10 @@ class User(db.Model, SerializerMixin):
 class Artist(db.Model, SerializerMixin):
     __tablename__ = "artists"
 
-    serialize_rules =()
+    serialize_rules = ("-artist_songs",)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
-    artist_songs =  db.relationship('Song', backref='artist')
+    artist_songs = db.relationship('Song', backref='artist')
 
 class Song(db.Model, SerializerMixin):
     __tablename__ = "songs"
@@ -53,19 +53,18 @@ class Song(db.Model, SerializerMixin):
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
     playlist_song = db.relationship('Playlist_Songs', backref='song')
 
-    serialize_rules =("-Playlist_Songs.song")
+    serialize_rules = ("-playlist_song",)
 
 
 class Playlist(db.Model, SerializerMixin):
-    __tablename__ ='playlists'
-    
+    __tablename__ = 'playlists'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     genre = db.Column(db.String)
     playlist_song = db.relationship('Playlist_Songs', backref='playlist')
 
-    serialize_rules =("-Playlist_Songs.playlist")
-
+    serialize_rules = ('playlist_song',)
 
 
 class Playlist_Songs(db.Model, SerializerMixin):
@@ -75,8 +74,38 @@ class Playlist_Songs(db.Model, SerializerMixin):
     song_id = db.Column(db.Integer, db.ForeignKey('songs.id'))
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
 
+    serialize_rules = ("song", "-playlist",)
 
-    serialize_rules =("Song.playlist_song" , "-Playlist.playlist_song")
+
+
+
+
+
+
+
+
+
+# class Playlist(db.Model, SerializerMixin):
+#     __tablename__ ='playlists'
+    
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String)
+#     genre = db.Column(db.String)
+#     playlist_song = db.relationship('Playlist_Songs', backref='playlist')
+
+#     serialize_rules =("-playlist.playlist_song")
+
+
+
+# class Playlist_Songs(db.Model, SerializerMixin):
+#     __tablename__ = 'playlist_songs'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     song_id = db.Column(db.Integer, db.ForeignKey('songs.id'))
+#     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
+
+
+#     serialize_rules =("Song.playlist_song" , "+Playlist.playlist_song")
 
 
 
