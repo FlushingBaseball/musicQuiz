@@ -8,16 +8,16 @@ from config import app, db
 
 
 
-# excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
+excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
 
-# @app.before_request ##hook that fires to check cookie
-# def check_is_logged_in():
-#     if request.endpoint not in excluded_endpoints:
-#         user_id = session.get('user_id')
-#         user = User.query.filter(User.id == user_id).first()
+@app.before_request ##hook that fires to check cookie
+def check_is_logged_in():
+    if request.endpoint not in excluded_endpoints:
+        user_id = session.get('user_id')
+        user = User.query.filter(User.id == user_id).first()
 
-#         if not user:
-#             return {'error': 'User is not logged in'}, 401
+        if not user:
+            return {'error': 'User is not logged in'}, 401
 
 
 @app.post('/signup')
@@ -39,7 +39,7 @@ def signup():
         db.session.commit()
     except Exception as e:
         print(e)
-        return {'error': 'Error creating user'}, 422
+        return {'error': f'Error creating user: {str(e)}'}, 422
 
     # add user_id cookie
     session['user_id'] = new_user.id
@@ -97,7 +97,7 @@ def logout():
 # Endpoint to get all songs in a particular playlist and load them into the audio element
 @app.get('/playlists/<int:playlist_id>/load_songs')
 def load_songs_into_audio_element(playlist_id):
-    
+
     # Check if the user is logged in before proceeding
 
     # if 'user_id' not in session:
