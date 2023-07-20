@@ -1,6 +1,6 @@
 //useRef allows me to store a value that persits between componet renders
 import React, {useEffect, useRef, useState} from 'react';
-import mp3File from './Songs/rock-lobster.mp3'; //webpack bundles files before running the app so I had no idea why normal paths weren't working
+// import mp3File from './Songs/rock-lobster.mp3'; //webpack bundles files before running the app so I had no idea why normal paths weren't working
 //you need to explicitly import files 
 
 
@@ -31,7 +31,8 @@ function MusicPlayer(){
             console.log(data)
 
             setPlaylistSongs(data.playlist_song);
-            setLocation(playlistSongs[0].song.location)
+           // setLocation(playlistSongs[0].song.location)
+            setLocation(data.playlist_song[0].song.location); // Set location after playlistSongs is updated
 
         })
         .catch((error) => {
@@ -53,7 +54,9 @@ function MusicPlayer(){
 
 
     const playRandomPart = () =>{
-        const audioElement = audioRef.current;
+         const audioElement = audioRef.current;
+        console.log(`this is audioElement${audioElement} NOW`)
+
         if (audioElement){
             const songDuration = audioElement.duration;
             const randomStart = Math.random() * (songDuration - 15);
@@ -83,7 +86,7 @@ function MusicPlayer(){
     return(
         <div>
         <audio ref={audioRef} controls>
-        <source  src={location} type="audio/mpeg" /> 
+        <source  src={process.env.PUBLIC_URL + {location}} type="audio/mpeg" /> 
         HEYYY, buddy your browser don't support the html5 audio player ahhhhhhhh lol
         </audio>
         <button onClick={playRandomPart}> Play random part</button>
