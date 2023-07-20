@@ -55,7 +55,6 @@ class Song(db.Model, SerializerMixin):
 
     serialize_rules = ("-playlist_song",)
 
-
 class Playlist(db.Model, SerializerMixin):
     __tablename__ = 'playlists'
 
@@ -76,36 +75,6 @@ class Playlist_Songs(db.Model, SerializerMixin):
 
     serialize_rules = ("song", "-playlist",)
 
-
-
-
-
-
-
-
-
-
-# class Playlist(db.Model, SerializerMixin):
-#     __tablename__ ='playlists'
-    
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String)
-#     genre = db.Column(db.String)
-#     playlist_song = db.relationship('Playlist_Songs', backref='playlist')
-
-#     serialize_rules =("-playlist.playlist_song")
-
-
-
-# class Playlist_Songs(db.Model, SerializerMixin):
-#     __tablename__ = 'playlist_songs'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     song_id = db.Column(db.Integer, db.ForeignKey('songs.id'))
-#     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
-
-
-#     serialize_rules =("Song.playlist_song" , "+Playlist.playlist_song")
 
 
 

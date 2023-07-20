@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function SignIn() {
+function SignIn( {setUser}) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -31,7 +31,7 @@ function SignIn() {
         }
         return response.json();
       })
-      .then((data) => {
+      .then((data) => {setUser(data)
         // Handle the response data after successful sign-in
         // For example, you could update the UI, save a token, or redirect the user
         console.log('Sign-in successful:', data);
@@ -41,6 +41,7 @@ function SignIn() {
         console.error('Error during sign-in:', error);
       });
   };
+  
 
   return (
     <div>
