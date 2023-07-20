@@ -8,16 +8,16 @@ from config import app, db
 
 
 
-# excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
+excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
 
-# @app.before_request ##hook that fires to check cookie
-# def check_is_logged_in():
-#     if request.endpoint not in excluded_endpoints:
-#         user_id = session.get('user_id')
-#         user = User.query.filter(User.id == user_id).first()
+@app.before_request ##hook that fires to check cookie
+def check_is_logged_in():
+    if request.endpoint not in excluded_endpoints:
+        user_id = session.get('user_id')
+        user = User.query.filter(User.id == user_id).first()
 
-#         if not user:
-#             return {'error': 'User is not logged in'}, 401
+        if not user:
+            return {'error': 'User is not logged in'}, 401
 
 
 @app.post('/signup')
