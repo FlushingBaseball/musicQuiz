@@ -2,24 +2,22 @@
 
 from flask import request, make_response, jsonify, session, Flask
 from sqlalchemy.exc import IntegrityError
-
-
-
-from config import app, db
 from models import User, Artist, Song, Playlist, Playlist_Songs
 
+from config import app, db
 
 
-excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
 
-@app.before_request ##hook that fires to check cookie
-def check_is_logged_in():
-    if request.endpoint not in excluded_endpoints:
-        user_id = session.get('user_id')
-        user = User.query.filter(User.id == user_id).first()
+# excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
 
-        if not user:
-            return {'error': 'User is not logged in'}, 401
+# @app.before_request ##hook that fires to check cookie
+# def check_is_logged_in():
+#     if request.endpoint not in excluded_endpoints:
+#         user_id = session.get('user_id')
+#         user = User.query.filter(User.id == user_id).first()
+
+#         if not user:
+#             return {'error': 'User is not logged in'}, 401
 
 
 @app.post('/signup')
@@ -74,11 +72,11 @@ def login():
     
     if not user or not user.authenticate(data['password']):
         # user doesn't exist or password doesn't match, return 401
-        return {'error': 'Login failed'}, 401
+        return make_response(jsonify({'error': 'Login failed'}), 401)
     
     # login success, add cookie to broswer
     session['user_id'] = user.id
-    return user.to_dict(), 201
+    return jsonify(user.to_dict()),200
 
 @app.delete('/logout')
 def logout():
@@ -96,10 +94,34 @@ def logout():
 
 
 
+# Endpoint to get all songs in a particular playlist and load them into the audio element
+@app.get('/playlists/<int:playlist_id>/load_songs')
+def load_songs_into_audio_element(playlist_id):
+    
+    # Check if the user is logged in before proceeding
+
+    # if 'user_id' not in session:
+    #     return make_response(jsonify({"error": "Unauthorized"}), 401)
+
+    # Retrieve the playlist from the database by its ID
+    playlist = Playlist.query.filter(Playlist.id == playlist_id).first()
+
+    if not playlist:
+        return make_response(jsonify({"error": "Playlist not found"}), 404)
+
+    # Retrieve all the songs associated with the playlist
+    songs = playlist.playlist_song  # Assuming the relationship is defined in the models
+
+    if not songs:
+        return make_response(jsonify({"error": "No songs found in the playlist"}), 404)
+
+    # Convert the songs to a list of dictionaries
+    songs_data = [song.to_dict() for song in songs]
+
+    # Return the list of songs data as JSON
+    return jsonify(songs_data), 200
 
 
-
-## actual endpoints
 
 @app.get('/playlists')
 def get_all_playlists():
@@ -126,5 +148,8 @@ def get_playlist_by_id(id):
     )
 
 
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
+
+
