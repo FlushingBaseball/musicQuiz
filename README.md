@@ -1,20 +1,14 @@
-## did not do the Client/package.json
-## did not do the playlist componet
-## I think my Nav link was further
-
-
-
-
-
-
-
-
-
-
 
 
 flask db init
 
+
+##fetch the songs
+
+##look at the object import that location pass that in as the source of the media player
+## look at require when you pass the path into the media player so it 
+
+src=require{location}
 
 
 ## Any time the database schema is changed run
