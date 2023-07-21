@@ -1,19 +1,19 @@
 //useRef allows me to store a value that persits between componet renders
-import React, {useEffect, useRef, useState} from 'react';
 // import mp3File from './Songs/rock-lobster.mp3'; //webpack bundles files before running the app so I had no idea why normal paths weren't working
 //you need to explicitly import files 
 
 
 // ##look at the object import that location pass that in as the source of the media player
 // ## look at require when you pass the path into the media player so it 
+// import FUCK from './Songs/rock-lobster.mp3'
 
 
-
+import React, {useEffect, useRef, useState} from 'react';
 
 function MusicPlayer(){
     const audioRef = useRef(null);  
     const [playlistSongs, setPlaylistSongs] = useState([]);
-    const [curretSongIndex, setCurrentSongIndex]= useState(0);
+    const [currentSongIndex, setCurrentSongIndex]= useState(0);
 
     const [location, setLocation] = useState(null)
 
@@ -31,8 +31,10 @@ function MusicPlayer(){
             console.log(data)
 
             setPlaylistSongs(data.playlist_song);
-           // setLocation(playlistSongs[0].song.location)
+            // setLocation(playlistSongs[0].song.location)
             setLocation(data.playlist_song[0].song.location); // Set location after playlistSongs is updated
+            console.log(typeof(location))
+            console.log(`this is the first location budy${data.playlist_song[0].song.location}`)
 
         })
         .catch((error) => {
@@ -54,9 +56,7 @@ function MusicPlayer(){
 
 
     const playRandomPart = () =>{
-         const audioElement = audioRef.current;
-        console.log(`this is audioElement${audioElement} NOW`)
-
+        const audioElement = audioRef.current;
         if (audioElement){
             const songDuration = audioElement.duration;
             const randomStart = Math.random() * (songDuration - 15);
@@ -71,7 +71,7 @@ function MusicPlayer(){
 
     const handleNextSong = () => {
         setCurrentSongIndex((prevIndex) => (prevIndex + 1) % playlistSongs.length);
-        setLocation(playlistSongs[curretSongIndex].song.location); // Auto-play the next song
+        setLocation(playlistSongs[currentSongIndex].song.location); // Auto-play the next song
         console.log(`current location is ${location}`)
       };
 
@@ -86,7 +86,7 @@ function MusicPlayer(){
     return(
         <div>
         <audio ref={audioRef} controls>
-        <source  src={process.env.PUBLIC_URL + {location}} type="audio/mpeg" /> 
+        <source  src={location} type="audio/mpeg" /> 
         HEYYY, buddy your browser don't support the html5 audio player ahhhhhhhh lol
         </audio>
         <button onClick={playRandomPart}> Play random part</button>
