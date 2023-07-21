@@ -156,6 +156,26 @@ def get_playlist_by_id(id):
 
 
 
+
+@app.get('/Client/src/Songs/<location>')
+def get_song_by_location(location):
+    song = Song.query.filter(
+        song.location == location
+    ).first()
+
+    if not location:
+        return make_response(
+            jsonify({"error": "location not found"}),
+            404
+
+        )
+    return make_response(
+        jsonify(location.to_dict()),
+        200
+    )
+
+
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
 
